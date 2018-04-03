@@ -9,5 +9,5 @@ exports:
     header-dirs:
         - src
     modules:
-        WebSocketClient:  src
+        WebSocketClient:  src/WebSocketClient
 
