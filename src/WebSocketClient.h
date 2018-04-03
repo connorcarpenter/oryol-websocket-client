@@ -18,5 +18,11 @@ namespace Oryol {
         Oryol::BaseSocketClient BaseSocketClient;
         Oryol::String serverUrl;
         std::function<void(Oryol::String msg)> receiveFunc;
+
+        #if ORYOL_EMSCRIPTEN
+        bool useSocketClient = true;
+        #else
+        bool useSocketClient = false;
+        #endif
     };
 }

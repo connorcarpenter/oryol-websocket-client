@@ -3,5 +3,5 @@ fips_begin_module(WebSocketClient)
     fips_files(
             BaseSocketClient.cpp BaseSocketClient.h
             WebSocketClient.cpp WebSocketClient.h)
-    fips_deps(IO)
+    fips_deps(Core IO)
 fips_end_module()
