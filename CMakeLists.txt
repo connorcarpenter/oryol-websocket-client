@@ -10,5 +10,3 @@ fips_setup()
 fips_project(oryol-websocket-client)
 fips_add_subdirectory(src/WebSocketClient)
 fips_finish()
-
-
