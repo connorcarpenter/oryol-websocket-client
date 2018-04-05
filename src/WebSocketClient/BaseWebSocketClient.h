@@ -20,7 +20,7 @@ namespace Oryol {
 
     class BaseWebSocketClientSetup {
     public:
-        Oryol::URL ServerUrl = "ws://localhost:3001";
+        Oryol::URL ServerUrl;
         std::function<void(Oryol::String msg)> ReceiveFunc;
     };
 
@@ -38,5 +38,7 @@ namespace Oryol {
         WebSocket::pointer ws = nullptr;
 
         BaseWebSocketClientSetup setup;
+
+        void handle_message(const std::string & message);
     };
 } // namespace Oryol

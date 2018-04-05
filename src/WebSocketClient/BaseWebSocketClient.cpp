@@ -27,7 +27,7 @@ BaseWebSocketClient::Setup(const BaseWebSocketClientSetup& setup) {
         this->ws = nullptr;
     }
 
-    this->ws = WebSocket::from_url(setup.ServerUrl);
+    this->ws = WebSocket::from_url(setup.ServerUrl.Get().AsCStr());
 
     this->setup = setup;
 }
@@ -38,7 +38,10 @@ BaseWebSocketClient::Update() {
     o_assert(this->ws);
     if (ws->getReadyState() != WebSocket::CLOSED) {
         this->ws->poll();
-        this->ws->dispatch(this->setup.ReceiveFunc);
+        this->ws->dispatch([this](const std::string & message) {
+            Oryol::String newstr(message.c_str());
+            this->setup.ReceiveFunc(newstr);
+        });
     }
 }
 
@@ -47,6 +50,14 @@ bool
 BaseWebSocketClient::Send(const String& msg) {
     o_assert(this->ws);
     if (ws->getReadyState() != WebSocket::CLOSED) {
-        this->ws->send(msg);
+        this->ws->send(msg.AsCStr());
     }
+    return true;
+}
+
+//------------------------------------------------------------------------------
+void BaseWebSocketClient::handle_message(const std::string & message)
+{
+    Oryol::String newstr(message.c_str());
+    this->setup.ReceiveFunc(newstr);
 }
