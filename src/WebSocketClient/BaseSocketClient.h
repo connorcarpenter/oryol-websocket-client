@@ -15,7 +15,7 @@ namespace Oryol {
 
     class BaseSocketClientSetup {
     public:
-        Oryol::URL ServerUrl = "ws://localhost:3001";
+        Oryol::URL ServerUrl;
         std::function<void(Oryol::String msg)> ReceiveFunc;
     };
 

@@ -4,6 +4,7 @@
 
 #include "Core/Log.h"
 #include "BaseSocketClient.h"
+#include "BaseWebSocketClient.h"
 
 namespace Oryol {
 
@@ -15,7 +16,8 @@ namespace Oryol {
         void receive(std::function<void(Oryol::String msg)> receiveFunction);
         void send(Oryol::String msg);
     private:
-        Oryol::BaseSocketClient BaseSocketClient;
+        Oryol::BaseSocketClient baseSocketClient;
+        Oryol::BaseWebSocketClient baseWebSocketClient;
         Oryol::String serverUrl;
         std::function<void(Oryol::String msg)> receiveFunc;
 
