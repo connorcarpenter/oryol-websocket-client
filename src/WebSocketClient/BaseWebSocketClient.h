@@ -6,7 +6,14 @@
     @brief WebSocket client wrapper
 */
 
+#include "Core/Types.h"
+#include "Core/Containers/Buffer.h"
+#include "IO/IOTypes.h"
+#include "Core/Time/Clock.h"
+#include <functional>
+
 #include "easywsclient/easywsclient.hpp"
+
 using easywsclient::WebSocket;
 
 namespace Oryol {
