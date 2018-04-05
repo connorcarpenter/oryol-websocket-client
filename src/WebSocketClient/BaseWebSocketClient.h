@@ -6,6 +6,9 @@
     @brief WebSocket client wrapper
 */
 
+#include "easywsclient/easywsclient.hpp"
+using easywsclient::WebSocket;
+
 namespace Oryol {
 
     class BaseWebSocketClientSetup {
@@ -24,5 +27,9 @@ namespace Oryol {
 
         /// asynchronously send a message, return false if send buffer was full
         bool Send(const Oryol::String &msg);
-    }
+
+        WebSocket::pointer ws = nullptr;
+
+        BaseWebSocketClientSetup setup;
+    };
 } // namespace Oryol
