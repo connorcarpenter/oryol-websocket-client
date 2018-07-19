@@ -33,31 +33,35 @@ BaseWebSocketClient::Setup(const BaseWebSocketClientSetup& setup) {
 }
 
 //------------------------------------------------------------------------------
-void
-BaseWebSocketClient::Update() {
-    o_assert(this->ws);
-    if (ws->getReadyState() != WebSocket::CLOSED) {
-        this->ws->poll();
-        this->ws->dispatch([this](const std::string & message) {
-            Oryol::String newstr(message.c_str());
-            this->setup.ReceiveFunc(newstr);
-        });
+void BaseWebSocketClient::Update() {
+    if (this->ws) {
+        if (ws->getReadyState() != WebSocket::CLOSED) {
+            this->ws->poll();
+            this->ws->dispatch([this](const std::string &message) {
+                Oryol::String newstr(message.c_str());
+                this->setup.MessageFunc(newstr);
+            });
+        }
     }
 }
 
 //------------------------------------------------------------------------------
-bool
-BaseWebSocketClient::Send(const String& msg) {
-    o_assert(this->ws);
-    if (ws->getReadyState() != WebSocket::CLOSED) {
-        this->ws->send(msg.AsCStr());
+bool BaseWebSocketClient::Send(const String& msg) {
+    if (this->ws) {
+        if (ws->getReadyState() != WebSocket::CLOSED) {
+            this->ws->send(msg.AsCStr());
+        }
+        return true;
     }
-    return true;
+    return false;
 }
 
 //------------------------------------------------------------------------------
-void BaseWebSocketClient::handle_message(const std::string & message)
-{
-    Oryol::String newstr(message.c_str());
-    this->setup.ReceiveFunc(newstr);
+void BaseWebSocketClient::Close() {
+    this->ws->close();
+}
+
+//------------------------------------------------------------------------------
+int BaseWebSocketClient::GetReadyState() {
+    return this->ws->getReadyState();
 }

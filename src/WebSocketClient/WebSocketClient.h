@@ -13,13 +13,21 @@ namespace Oryol {
         WebSocketClient();
         void connect(Oryol::String serverUrl);
         void update();
-        void receive(std::function<void(Oryol::String msg)> receiveFunction);
+        void onMessage(std::function<void(Oryol::String msg)> receiveFunction);
+        void onError(std::function<void(Oryol::String msg)> errorFunction);
+        void onOpen(std::function<void()> openFunction);
+        void onClose(std::function<void(Oryol::String msg)> closeFunction);
         void send(Oryol::String msg);
+        void close();
+        int getReadyState();
     private:
         Oryol::BaseSocketClient baseSocketClient;
         Oryol::BaseWebSocketClient baseWebSocketClient;
         Oryol::String serverUrl;
-        std::function<void(Oryol::String msg)> receiveFunc;
+        std::function<void(Oryol::String msg)> messageFunc;
+        std::function<void(Oryol::String msg)> errorFunc;
+        std::function<void(Oryol::String msg)> closeFunc;
+        std::function<void()> openFunc;
 
         #if ORYOL_EMSCRIPTEN
         bool useSocketClient = true;

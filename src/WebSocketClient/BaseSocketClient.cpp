@@ -30,7 +30,7 @@ static bool wouldBlockOrConnected() {
 //------------------------------------------------------------------------------
 void
 BaseSocketClient::Setup(const BaseSocketClientSetup& setup) {
-    o_assert(setup.ReceiveFunc);
+    o_assert(setup.MessageFunc);
 
     this->setup = setup;
     this->state = Disconnected;
@@ -298,7 +298,20 @@ BaseSocketClient::scanMessages() {
             scanPos = 0;
 
             // and call the message callback
-            this->setup.ReceiveFunc(msg);
+            this->setup.MessageFunc(msg);
         }
+    }
+}
+
+void BaseSocketClient::Close() {
+    //not implemented!
+}
+
+int BaseSocketClient::GetReadyState() {
+    switch (this->state){
+        case Disconnected:
+            return 3; // Equal to CLOSED state in https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/readyState
+        case Connected:
+            return 1; // Equal to OPEN state in https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/readyState
     }
 }

@@ -16,7 +16,10 @@ namespace Oryol {
     class BaseSocketClientSetup {
     public:
         Oryol::URL ServerUrl;
-        std::function<void(Oryol::String msg)> ReceiveFunc;
+        std::function<void(Oryol::String msg)> MessageFunc;
+        std::function<void(Oryol::String msg)> ErrorFunc;
+        std::function<void()> OpenFunc;
+        std::function<void(Oryol::String msg)> CloseFunc;
     };
 
     class BaseSocketClient {
@@ -39,6 +42,8 @@ namespace Oryol {
         void Update();
         /// asynchronously send a message, return false if send buffer was full
         bool Send(const Oryol::String& msg);
+        /// close connection
+        void Close();
 
         /// get the server address
         const char* ServerAddress() const {
@@ -57,6 +62,8 @@ namespace Oryol {
             return Oryol::Clock::Since(this->lastRecvTime);
         }
 
+
+        int GetReadyState();
 
     private:
         /// create the client socket
