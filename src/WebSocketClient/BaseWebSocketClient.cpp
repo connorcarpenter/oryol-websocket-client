@@ -27,21 +27,26 @@ BaseWebSocketClient::Setup(const BaseWebSocketClientSetup& setup) {
         this->ws = nullptr;
     }
 
-    this->ws = WebSocket::from_url(setup.ServerUrl.Get().AsCStr());
+    this->doConnect();
 
     this->setup = setup;
 }
 
 //------------------------------------------------------------------------------
-void BaseWebSocketClient::Update() {
-    if (this->ws) {
-        if (ws->getReadyState() != WebSocket::CLOSED) {
-            this->ws->poll();
-            this->ws->dispatch([this](const std::string &message) {
-                Oryol::String newstr(message.c_str());
-                this->setup.MessageFunc(newstr);
-            });
-        }
+void BaseWebSocketClient::Update()
+{
+    if (this->waitFrames > 0) {
+        this->waitFrames--;
+        return;
+    }
+
+    if (this->ws)
+    {
+        this->onConnected();
+    }
+    else
+    {
+        this->doConnect();
     }
 }
 
@@ -49,7 +54,7 @@ void BaseWebSocketClient::Update() {
 bool BaseWebSocketClient::Send(const String& msg) {
     if (this->ws) {
         if (ws->getReadyState() != WebSocket::CLOSED) {
-            this->ws->send(msg.AsCStr());
+            this->ws->sendBinary(msg.AsCStr());
         }
         return true;
     }
@@ -64,4 +69,35 @@ void BaseWebSocketClient::Close() {
 //------------------------------------------------------------------------------
 int BaseWebSocketClient::GetReadyState() {
     return this->ws->getReadyState();
+}
+
+void BaseWebSocketClient::doConnect() {
+    this->ws = WebSocket::from_url(setup.ServerUrl.Get().AsCStr());
+}
+
+void BaseWebSocketClient::onConnected()
+{
+    if (ws->getReadyState() == WebSocket::CLOSED)
+    {
+        delete this->ws;
+        this->ws = nullptr;
+        this->waitFrames = 300;
+    }
+    else
+    {
+        if (!this->opened)
+        {
+            this->setup.OpenFunc();
+            this->opened = true;
+        }
+        this->ws->poll();
+        this->ws->dispatch([this](const std::string &message){
+            Oryol::String newstr(message.c_str());
+            this->setup.MessageFunc(newstr);
+        });
+        if (this->ws->getReadyState() == WebSocket::CLOSED)
+        {
+            this->setup.CloseFunc("");
+        }
+    }
 }

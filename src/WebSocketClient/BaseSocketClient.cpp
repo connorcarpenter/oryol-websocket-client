@@ -190,6 +190,11 @@ BaseSocketClient::onConnected() {
     FD_SET(this->sock, &fdr);
     FD_SET(this->sock, &fdw);
 
+    if (!this->opened) {
+        this->setup.OpenFunc();
+        this->opened = true;
+    }
+
     struct timeval tv = { };
     const int selectRes = select(int(this->sock+1), &fdr, &fdw, 0, &tv);
     if (selectRes == SOCKET_ERROR) {

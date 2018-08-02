@@ -93,6 +93,8 @@ namespace Oryol {
         int sock = 0;
 
         int waitFrames = 0;
+
+        bool opened = false;
     };
 
 } // namespace Oryol

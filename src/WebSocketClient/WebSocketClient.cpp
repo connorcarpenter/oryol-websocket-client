@@ -21,7 +21,7 @@ namespace Oryol {
     }
 
     void WebSocketClient::connect(Oryol::String serverUrl) {
-        Log::Info("WebSocketClient Connecting: %s", useSocketClient ? "s" : "ws");
+        Log::Info("WebSocketClient Connecting: %s\n", useSocketClient ? "s" : "ws");
         this->serverUrl = serverUrl;
 
         if (this->useSocketClient) {

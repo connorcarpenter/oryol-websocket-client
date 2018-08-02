@@ -41,10 +41,19 @@ namespace Oryol {
         /// close connection
         void Close();
 
+        /// start connecting, called when currently disconnected
+        void doConnect();
+
+        /// called while in connected state, send and receive messages
+        void onConnected();
+
         WebSocket::pointer ws = nullptr;
 
         BaseWebSocketClientSetup setup;
 
         int GetReadyState();
+    private:
+        bool opened = false;
+        int waitFrames = 0;
     };
 } // namespace Oryol
