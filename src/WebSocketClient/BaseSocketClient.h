@@ -65,6 +65,8 @@ namespace Oryol {
 
         int GetReadyState();
 
+        void setEscapeCharacter(uint8_t c);
+
     private:
         /// create the client socket
         void createSocket();
@@ -95,6 +97,10 @@ namespace Oryol {
         int waitFrames = 0;
 
         bool opened = false;
+
+        uint8_t getEscapeCharacter();
+
+        uint8_t escapeCharacter = '\r';
     };
 
 } // namespace Oryol

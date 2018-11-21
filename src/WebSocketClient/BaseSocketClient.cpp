@@ -15,6 +15,8 @@
 #define SOCKET_ERROR (-1)
 #endif
 
+#include <ostream>
+#include <iostream>
 #include "BaseSocketClient.h"
 
 using namespace Oryol;
@@ -259,7 +261,7 @@ BaseSocketClient::recvNextChunk() {
     while (!done) {
         ssize_t recvRes = recv(this->sock, (char*) recvBuf, sizeof(recvBuf), 0);
         if (0 == recvRes) {
-            Log::Warn("Error in recv() (returned 0), disconnecting!\n");
+            std::cout << "Error in recv() (returned 0), disconnecting!" << std::endl;
             return false;
         }
         else if (recvRes > 0) {
@@ -274,7 +276,7 @@ BaseSocketClient::recvNextChunk() {
                 done = true;
             }
             else {
-                Log::Warn("Error in recv() (returned error), disconnecting!\n");
+                std::cout << "Error in recv() (returned error), disconnecting!" << std::endl;
                 return false;
             }
         }
@@ -291,7 +293,7 @@ BaseSocketClient::scanMessages() {
     uint8_t* recvData = this->recvBuffer.Data();
     int recvSize = this->recvBuffer.Size();
     for (int scanPos = 0; scanPos < recvSize; scanPos++) {
-        if ('\r' == recvData[scanPos]) {
+        if (getEscapeCharacter() == recvData[scanPos]) {
             // found the end of a command, extract into string,
             // remove from recvBuffer and call handler
             String msg((const char*)recvData, 0, scanPos);
@@ -319,4 +321,12 @@ int BaseSocketClient::GetReadyState() {
         case Connected:
             return 1; // Equal to OPEN state in https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/readyState
     }
+}
+
+uint8_t BaseSocketClient::getEscapeCharacter() {
+    return this->escapeCharacter;
+}
+
+void BaseSocketClient::setEscapeCharacter(uint8_t c) {
+    this->escapeCharacter = c;
 }

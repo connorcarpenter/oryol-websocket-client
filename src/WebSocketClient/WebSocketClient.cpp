@@ -90,4 +90,9 @@ namespace Oryol {
     void WebSocketClient::onClose(std::function<void(Oryol::String msg)> closeFunction){
         this->closeFunc = closeFunction;
     }
+
+    void WebSocketClient::setEscapeCharacter(uint8_t c)
+    {
+        this->baseSocketClient.setEscapeCharacter(c);
+    }
 }

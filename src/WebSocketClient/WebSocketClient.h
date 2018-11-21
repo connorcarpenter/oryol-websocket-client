@@ -34,5 +34,7 @@ namespace Oryol {
         #else
         bool useSocketClient = false;
         #endif
+
+        void setEscapeCharacter(uint8_t c);
     };
 }
