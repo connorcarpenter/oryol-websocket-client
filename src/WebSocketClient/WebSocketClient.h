@@ -20,6 +20,8 @@ namespace Oryol {
         void send(Oryol::String msg);
         void close();
         int getReadyState();
+        void setEscapeCharacter(uint8_t c);
+
     private:
         Oryol::BaseSocketClient baseSocketClient;
         Oryol::BaseWebSocketClient baseWebSocketClient;
@@ -35,6 +37,5 @@ namespace Oryol {
         bool useSocketClient = false;
         #endif
 
-        void setEscapeCharacter(uint8_t c);
     };
 }
