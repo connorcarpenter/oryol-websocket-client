@@ -92,7 +92,7 @@ void BaseWebSocketClient::onConnected()
         }
         this->ws->poll();
         this->ws->dispatch([this](const std::string &message){
-            Oryol::String newstr(message.c_str());
+            Oryol::String newstr(message.c_str(), 0, message.length());
             this->setup.MessageFunc(newstr);
         });
         if (this->ws->getReadyState() == WebSocket::CLOSED)
